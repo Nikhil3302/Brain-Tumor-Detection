@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain Tumor Detection & Classification CAD System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --accent-blue: #38bdf8;
+      --accent-green: #22c55e;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+    .navbar {
+      background-color: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+    }
+    .nav-tabs .nav-link {
+      color: var(--text-muted);
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 10px 18px;
+      font-weight: 500;
+    }
+    .nav-tabs .nav-link.active {
+      color: var(--accent-blue);
+      background: transparent;
+      border-bottom: 2px solid var(--accent-blue);
+    }
+    .nav-tabs .nav-link:hover {
+      color: #e2e8f0;
+    }
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+    .stage-card {
+      background-color: #0b1329;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .stage-card:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+    .stage-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      background: #000;
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
+    .stage-badge {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: #1e293b;
+      color: var(--accent-blue);
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+    .confidence-badge {
+      font-size: 1.25rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 30px;
+      display: inline-block;
+    }
+    .progress {
+      height: 10px;
+      background-color: #334155;
+      border-radius: 5px;
+    }
+    .btn-cad {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: white;
+      border: none;
+      font-weight: 600;
+      padding: 10px 24px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-cad:hover {
+      background: linear-gradient(135deg, #0369a1, #1d4ed8);
+      color: white;
+      box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+    }
+    .table-dark-custom {
+      background-color: var(--card-bg);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+    .table-dark-custom th {
+      background-color: #0b1329;
+      color: var(--accent-blue);
+      border-color: var(--border-color);
+    }
+    .table-dark-custom td {
+      border-color: var(--border-color);
+    }
+    .metric-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+    }
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--accent-green);
+    }
+    .metric-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg px-4 sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand text-white fw-bold d-flex align-items-center" href="#">
+        <i class="fa-solid fa-brain text-info me-2 fs-4"></i>
+        <span>Brain Tumor CAD Framework</span>
+        <span class="badge bg-primary ms-2" style="font-size: 0.65rem;">YOLO-NAS + EfficientNet</span>
+      </a>
+      <div class="text-muted small d-none d-md-block">
+        Mohan Babu University &bull; Dept. of Computer Science & Engineering
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header Banner -->
+  <div class="container-fluid px-4 py-3 bg-black border-bottom border-secondary bg-opacity-25">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h5 class="fw-bold text-white mb-1">
+          An Automated Deep Learning Framework for Brain Tumor Detection and Classification Using MRI
+        </h5>
+        <p class="small text-muted mb-0">
+          Authors: <strong>Dr. D. Ganesh</strong>, <strong>Mr. P. Venkateswarlu Reddy</strong>,
+          <strong>Neeruganti Vidya Sree</strong>, <strong>Thotla Chakra Ganesh</strong>,
+          <strong class="text-info">Pudi Nikhil Surya Teja</strong>, <strong>Galam Dhanunjaneya</strong>
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end mt-2 mt-lg-0">
+        <span class="badge bg-secondary p-2"><i class="fa-solid fa-microchip me-1"></i> YOLO-NAS Detector</span>
+        <span class="badge bg-success p-2"><i class="fa-solid fa-network-wired me-1"></i> EfficientNet Classifier</span>
+        <span class="badge bg-info text-dark p-2"><i class="fa-solid fa-hospital me-1"></i> CAD Assist</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid px-4 py-4">
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mb-4" id="cadTabs" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link active" id="station-tab" data-bs-toggle="tab" data-bs-target="#station" type="button">
+          <i class="fa-solid fa-stethoscope me-1"></i> Diagnostic CAD Workstation
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="benchmarks-tab" data-bs-toggle="tab" data-bs-target="#benchmarks" type="button">
+          <i class="fa-solid fa-chart-column me-1"></i> Benchmark Results (Table 1 & Fig 7)
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="cm-tab" data-bs-toggle="tab" data-bs-target="#cm" type="button">
+          <i class="fa-solid fa-table-cells me-1"></i> Confusion Matrix (Figure 6)
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="method-tab" data-bs-toggle="tab" data-bs-target="#method" type="button">
+          <i class="fa-solid fa-diagram-project me-1"></i> Architecture & Methodology
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab Contents -->
+    <div class="tab-content" id="cadTabsContent">
+
+      <!-- TAB 1: CAD Workstation -->
+      <div class="tab-pane fade show active" id="station" role="tabpanel">
+        <div class="row g-4">
+
+          <!-- Left Column: Input Control Panel -->
+          <div class="col-lg-4">
+            <div class="card p-3 mb-4">
+              <h6 class="text-info fw-bold mb-3"><i class="fa-solid fa-upload me-2"></i>1. Select MRI Image</h6>
+              
+              <!-- File Upload Form -->
+              <form id="uploadForm" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label class="form-label text-muted small">Upload Brain MRI Scan (JPG/PNG/DICOM)</label>
+                  <input class="form-control form-control-sm bg-dark text-white border-secondary" type="file" id="mriFileInput" name="file" accept="image/*">
+                </div>
+              </form>
+
+              <!-- Quick Preloaded Samples -->
+              <div class="mb-3">
+                <label class="form-label text-muted small"><i class="fa-solid fa-folder-open me-1"></i> Or Select Sample Scan:</label>
+                <div class="row g-2">
+                  {% for s in samples %}
+                  <div class="col-6">
+                    <button class="btn btn-outline-secondary btn-sm w-100 text-truncate select-sample-btn" data-path="{{ s.path }}">
+                      <i class="fa-solid fa-circle-dot text-info me-1"></i>{{ s.class }}
+                    </button>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- Synthetic MRI Generator (Figure 2 replication) -->
+              <div class="p-2 border border-secondary rounded bg-black bg-opacity-25 mb-3">
+                <label class="form-label text-muted small fw-bold mb-1">
+                  <i class="fa-solid fa-wand-magic-sparkles text-warning me-1"></i>Generate Instant Test Scan:
+                </label>
+                <div class="input-group input-group-sm mb-2">
+                  <select class="form-select bg-dark text-white border-secondary" id="synthType">
+                    <option value="Glioma">Glioma (Grade IV)</option>
+                    <option value="Meningioma">Meningioma</option>
+                    <option value="Pituitary">Pituitary Tumor</option>
+                    <option value="Non-Tumor">Non-Tumor (Normal)</option>
+                  </select>
+                  <select class="form-select bg-dark text-white border-secondary" id="synthView">
+                    <option value="axial">Axial</option>
+                    <option value="coronal">Coronal</option>
+                    <option value="sagittal">Sagittal</option>
+                  </select>
+                  <button class="btn btn-outline-warning" id="btnGenerateSynth">Generate</button>
+                </div>
+              </div>
+
+              <!-- Run Diagnosis Button -->
+              <button class="btn btn-cad w-100 py-2 fs-6" id="btnRunDiagnosis">
+                <i class="fa-solid fa-play me-2"></i>Run CAD Pipeline
+              </button>
+
+              <div id="loadingIndicator" class="text-center my-3 d-none">
+                <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+                <span class="text-muted small">Running Preprocessing &rarr; YOLO-NAS &rarr; EfficientNet...</span>
+              </div>
+            </div>
+
+            <!-- Pipeline Step Flow Info -->
+            <div class="card p-3">
+              <h6 class="text-white fw-bold mb-2 small"><i class="fa-solid fa-circle-info text-info me-1"></i>Algorithm Pipeline (Section 3.5)</h6>
+              <ol class="small text-muted ps-3 mb-0">
+                <li>Acquire Brain MRI (BraTS / BR35H / REMBRANDT)</li>
+                <li>Denoise + CLAHE Contrast Normalization</li>
+                <li>YOLO-NAS Single-Stage Tumor Detection</li>
+                <li>Region of Interest (ROI) Extraction</li>
+                <li>EfficientNet Multi-Class Classification</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Right Column: Visual Multi-Stage Diagnosis Output -->
+          <div class="col-lg-8">
+
+            <!-- Diagnosis Status Alert Banner -->
+            <div id="resultBanner" class="card p-3 mb-4 d-none">
+              <div class="row align-items-center">
+                <div class="col-md-7">
+                  <div class="text-muted small text-uppercase">Diagnostic Decision</div>
+                  <h3 id="predictedClassLabel" class="fw-bold mb-0 text-white">Glioma</h3>
+                  <div id="binaryClassBadge" class="small mt-1 text-danger">Malignant Lesion Detected</div>
+                </div>
+                <div class="col-md-5 text-md-end mt-2 mt-md-0">
+                  <div class="confidence-badge bg-info text-dark" id="confidenceBadge">
+                    <span id="classConfidenceVal">94.8%</span> Confidence
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4-Stage Image Grid -->
+            <div class="row g-3 mb-4">
+              <!-- Stage 1 -->
+              <div class="col-6 col-md-3">
+                <div class="stage-card">
+                  <span class="stage-badge">1. Input MRI</span>
+                  <img id="imgOriginal" src="https://via.placeholder.com/224x224/0f172a/64748b?text=MRI+Input" alt="Input Scan">
+                  <div class="small text-muted mt-1">Raw Brain Scan</div>
+                </div>
+              </div>
+
+              <!-- Stage 2 -->
+              <div class="col-6 col-md-3">
+                <div class="stage-card">
+                  <span class="stage-badge">2. Preprocessed</span>
+                  <img id="imgPreprocessed" src="https://via.placeholder.com/224x224/0f172a/64748b?text=CLAHE+Enhanced" alt="Preprocessed">
+                  <div class="small text-muted mt-1">CLAHE Enhanced</div>
+                </div>
+              </div>
+
+              <!-- Stage 3 -->
+              <div class="col-6 col-md-3">
+                <div class="stage-card">
+                  <span class="stage-badge">3. YOLO-NAS</span>
+                  <img id="imgAnnotated" src="https://via.placeholder.com/224x224/0f172a/64748b?text=Tumor+BBox" alt="Detection">
+                  <div class="small text-muted mt-1" id="detStatusText">Localization BBox</div>
+                </div>
+              </div>
+
+              <!-- Stage 4 -->
+              <div class="col-6 col-md-3">
+                <div class="stage-card">
+                  <span class="stage-badge">4. Extracted ROI</span>
+                  <img id="imgRoi" src="https://via.placeholder.com/224x224/0f172a/64748b?text=Extracted+ROI" alt="Extracted ROI">
+                  <div class="small text-muted mt-1">EfficientNet Input</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Probability Breakdown Bars -->
+            <div class="card p-3 mb-4">
+              <h6 class="text-white fw-bold mb-3"><i class="fa-solid fa-chart-simple text-info me-2"></i>EfficientNet Posterior Class Probabilities</h6>
+              
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small mb-1">
+                  <span>Glioma (Grade IV Astrocytoma/Glioblastoma)</span>
+                  <span id="probGliomaText" class="fw-bold">0%</span>
+                </div>
+                <div class="progress">
+                  <div id="probGliomaBar" class="progress-bar bg-danger" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small mb-1">
+                  <span>Meningioma (Dural Meningeal Tumor)</span>
+                  <span id="probMeningiomaText" class="fw-bold">0%</span>
+                </div>
+                <div class="progress">
+                  <div id="probMeningiomaBar" class="progress-bar bg-warning" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small mb-1">
+                  <span>Pituitary Tumor (Sella Turcica Mass)</span>
+                  <span id="probPituitaryText" class="fw-bold">0%</span>
+                </div>
+                <div class="progress">
+                  <div id="probPituitaryBar" class="progress-bar bg-info" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="d-flex justify-content-between small mb-1">
+                  <span>Non-Tumor (Normal Brain Parenchyma)</span>
+                  <span id="probNonTumorText" class="fw-bold">0%</span>
+                </div>
+                <div class="progress">
+                  <div id="probNonTumorBar" class="progress-bar bg-success" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Clinical Report Actions -->
+            <div class="card p-3 d-flex flex-row justify-content-between align-items-center">
+              <div>
+                <span class="text-muted small"><i class="fa-solid fa-circle-check text-success me-1"></i> Automated ROI selection & zero human variability</span>
+              </div>
+              <div>
+                <button class="btn btn-outline-light btn-sm" onclick="window.print()"><i class="fa-solid fa-print me-1"></i>Print Report</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Benchmark Results (Table 1 & Figure 7) -->
+      <div class="tab-pane fade" id="benchmarks" role="tabpanel">
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card p-3 mb-4">
+              <h5 class="text-info fw-bold mb-3"><i class="fa-solid fa-table me-2"></i>Table 1. Results of Various Algorithms</h5>
+              <div class="table-responsive">
+                <table class="table table-dark-custom table-bordered table-hover text-center align-middle">
+                  <thead>
+                    <tr>
+                      <th class="text-start">Parameter</th>
+                      <th>CNN</th>
+                      <th>VGG16</th>
+                      <th class="text-success fw-bold">Hybrid Approach</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-start fw-semibold">Accuracy</td>
+                      <td>83%</td>
+                      <td>85%</td>
+                      <td class="text-success fw-bold">88%</td>
+                    </tr>
+                    <tr>
+                      <td class="text-start fw-semibold">Balanced Accuracy</td>
+                      <td>79%</td>
+                      <td>82%</td>
+                      <td class="text-success fw-bold">86%</td>
+                    </tr>
+                    <tr>
+                      <td class="text-start fw-semibold">Sensitivity (Recall)</td>
+                      <td>78%</td>
+                      <td>81%</td>
+                      <td class="text-success fw-bold">85%</td>
+                    </tr>
+                    <tr>
+                      <td class="text-start fw-semibold">Specificity</td>
+                      <td>84%</td>
+                      <td>86%</td>
+                      <td class="text-success fw-bold">89%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="small text-muted mt-2">
+                <strong>Discussion from Section 4:</strong> "The suggested hybrid method does better than the CNN and VGG16 models in all tests.
+                The increase in balanced accuracy and sensitivity suggests it is better at managing unequal class sizes and at spotting tumor cases.
+                The higher rate of correctly identified non-tumor samples confirms the model’s capability."
+              </p>
+            </div>
+
+            <!-- Key Advantages Grid -->
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="metric-box">
+                  <div class="metric-title">Accuracy Gain</div>
+                  <div class="metric-value">+5.0%</div>
+                  <div class="small text-muted">Over conventional CNN</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="metric-box">
+                  <div class="metric-title">Sensitivity Gain</div>
+                  <div class="metric-value">+7.0%</div>
+                  <div class="small text-muted">Better tumor detection</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card p-3">
+              <h5 class="text-white fw-bold mb-3"><i class="fa-solid fa-chart-column text-success me-2"></i>Figure 7: Comparative Performance Graph</h5>
+              <img src="/outputs/figure_7_comparative_graph.png" class="img-fluid rounded border border-secondary" alt="Figure 7 Performance Graph">
+              <div class="small text-muted mt-2">
+                Replication of Figure 7: Comparison of CNN, VGG16, and the proposed Hybrid Approach (YOLO-NAS + EfficientNet).
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Confusion Matrix (Figure 6) -->
+      <div class="tab-pane fade" id="cm" role="tabpanel">
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-6">
+            <div class="card p-3 text-center">
+              <h5 class="text-white fw-bold mb-2">Figure 6: Confusion Matrix for Hybrid YOLO-NAS-EfficientNet Model</h5>
+              <p class="text-muted small mb-3">Total Validated Test Scans: N = 1,000</p>
+              <img src="/outputs/figure_6_confusion_matrix.png" class="img-fluid rounded border border-secondary mx-auto" style="max-height: 420px;" alt="Confusion Matrix">
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="text-info fw-bold mb-3"><i class="fa-solid fa-calculator me-2"></i>Quantitative Matrix Analysis</h5>
+              <ul class="list-group list-group-flush bg-transparent mb-3">
+                <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+                  <span>True Negatives (Correct Non-Tumor):</span>
+                  <span class="badge bg-success fs-6">485</span>
+                </li>
+                <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+                  <span>True Positives (Correct Tumor Identified):</span>
+                  <span class="badge bg-primary fs-6">490</span>
+                </li>
+                <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+                  <span>False Positives (Type I Error):</span>
+                  <span class="badge bg-warning text-dark fs-6">15</span>
+                </li>
+                <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+                  <span>False Negatives (Type II Error):</span>
+                  <span class="badge bg-danger fs-6">10</span>
+                </li>
+              </ul>
+
+              <div class="p-3 rounded bg-dark border border-secondary">
+                <div class="small text-muted mb-1">Derived Diagnostic Reliability:</div>
+                <div class="row text-center">
+                  <div class="col-4">
+                    <span class="text-info fw-bold fs-5">97.5%</span>
+                    <div class="small text-muted">Test Accuracy</div>
+                  </div>
+                  <div class="col-4">
+                    <span class="text-success fw-bold fs-5">98.0%</span>
+                    <div class="small text-muted">True Tumor Recall</div>
+                  </div>
+                  <div class="col-4">
+                    <span class="text-primary fw-bold fs-5">97.0%</span>
+                    <div class="small text-muted">Specificity</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: Architecture & Methodology -->
+      <div class="tab-pane fade" id="method" role="tabpanel">
+        <div class="card p-4 mb-4">
+          <h4 class="text-info fw-bold mb-3"><i class="fa-solid fa-network-wired me-2"></i>Proposed Deep Learning Methodology</h4>
+          
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="p-3 border border-secondary rounded bg-dark h-100">
+                <h6 class="text-warning fw-bold"><i class="fa-solid fa-crop me-2"></i>3.1 YOLO-NAS Detector</h6>
+                <p class="small text-muted mb-0">
+                  Optimized using Neural Architecture Search (NAS) to achieve superior single-stage localization.
+                  Predicts bounding boxes to pinpoint tumors regardless of shape, scale, or contrast variations,
+                  eliminating manual region selection.
+                </p>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="p-3 border border-secondary rounded bg-dark h-100">
+                <h6 class="text-primary fw-bold"><i class="fa-solid fa-vector-square me-2"></i>3.2 ROI Extraction</h6>
+                <p class="small text-muted mb-0">
+                  Predicted bounding boxes isolate the pathological tissue from surrounding background noise.
+                  This ensures downstream classification concentrates solely on relevant neoplastic morphological features.
+                </p>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="p-3 border border-secondary rounded bg-dark h-100">
+                <h6 class="text-success fw-bold"><i class="fa-solid fa-layer-group me-2"></i>3.3 EfficientNet Classifier</h6>
+                <p class="small text-muted mb-0">
+                  Employs compound scaling balancing network depth, width, and resolution.
+                  Extracts fine-grained semantic attributes (texture, intensity, edges) to classify ROIs into Glioma, Meningioma, Pituitary, or Non-tumor.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="border-secondary my-4">
+
+          <h5 class="text-white fw-bold mb-3">Key Datasets Benchmarked</h5>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="card p-3 bg-dark border-secondary">
+                <strong class="text-info">BraTS (Brain Tumor Segmentation)</strong>
+                <span class="small text-muted">Multi-modal MRI scans with expert clinical annotations.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card p-3 bg-dark border-secondary">
+                <strong class="text-info">REMBRANDT</strong>
+                <span class="small text-muted">Diverse clinical glioma and astrocytoma repository.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card p-3 bg-dark border-secondary">
+                <strong class="text-info">BR35H</strong>
+                <span class="small text-muted">Tumor vs Non-Tumor MRI collection for CAD validation.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let activeSamplePath = null;
+
+    // Sample selection
+    document.querySelectorAll('.select-sample-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        activeSamplePath = this.dataset.path;
+        document.getElementById('mriFileInput').value = '';
+        triggerDiagnosis({ sample_path: activeSamplePath });
+      });
+    });
+
+    // Generate Synthetic Sample
+    document.getElementById('btnGenerateSynth').addEventListener('click', async function() {
+      const type = document.getElementById('synthType').value;
+      const view = document.getElementById('synthView').value;
+      const btn = this;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+      try {
+        const resp = await fetch('/generate_sample', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: type, view: view })
+        });
+        const data = await resp.json();
+        if (data.success) {
+          activeSamplePath = data.sample_path;
+          triggerDiagnosis({ sample_path: activeSamplePath });
+        }
+      } catch (err) {
+        alert('Generation failed: ' + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Generate';
+      }
+    });
+
+    // Run Diagnosis Button
+    document.getElementById('btnRunDiagnosis').addEventListener('click', function() {
+      const fileInput = document.getElementById('mriFileInput');
+      if (fileInput.files.length > 0) {
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        triggerDiagnosis(formData, true);
+      } else if (activeSamplePath) {
+        triggerDiagnosis({ sample_path: activeSamplePath });
+      } else {
+        alert('Please select or upload an MRI scan first!');
+      }
+    });
+
+    // Execute Diagnosis API call
+    async function triggerDiagnosis(payload, isFormData = false) {
+      const loader = document.getElementById('loadingIndicator');
+      loader.classList.remove('d-none');
+
+      try {
+        let resp;
+        if (isFormData) {
+          resp = await fetch('/diagnose', { method: 'POST', body: payload });
+        } else {
+          const fd = new FormData();
+          fd.append('sample_path', payload.sample_path);
+          resp = await fetch('/diagnose', { method: 'POST', body: fd });
+        }
+        const data = await resp.json();
+        if (data.success) {
+          updateUI(data);
+        } else {
+          alert('Diagnosis Error: ' + data.error);
+        }
+      } catch (err) {
+        alert('Network/Server Error: ' + err);
+      } finally {
+        loader.classList.add('d-none');
+      }
+    }
+
+    // Update UI elements with prediction results
+    function updateUI(data) {
+      // Show result banner
+      const banner = document.getElementById('resultBanner');
+      banner.classList.remove('d-none');
+
+      const classLabel = document.getElementById('predictedClassLabel');
+      const binaryBadge = document.getElementById('binaryClassBadge');
+      const confBadge = document.getElementById('confidenceBadge');
+      const confVal = document.getElementById('classConfidenceVal');
+
+      classLabel.innerText = data.predicted_class;
+      confVal.innerText = data.class_confidence + '%';
+
+      if (data.predicted_class === 'Non-Tumor') {
+        classLabel.className = 'fw-bold mb-0 text-success';
+        binaryBadge.className = 'small mt-1 text-success';
+        binaryBadge.innerHTML = '<i class="fa-solid fa-check-circle me-1"></i> Normal Brain Tissue (No Tumor Detected)';
+        confBadge.className = 'confidence-badge bg-success text-white';
+      } else {
+        classLabel.className = 'fw-bold mb-0 text-danger';
+        binaryBadge.className = 'small mt-1 text-danger';
+        binaryBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-1"></i> Pathological Tumor Detected (ROI Confirmed)';
+        confBadge.className = 'confidence-badge bg-danger text-white';
+      }
+
+      // Update Images
+      document.getElementById('imgOriginal').src = data.images.original;
+      document.getElementById('imgPreprocessed').src = data.images.preprocessed;
+      document.getElementById('imgAnnotated').src = data.images.annotated;
+      document.getElementById('imgRoi').src = data.images.roi;
+
+      document.getElementById('detStatusText').innerText = data.detected ? 
+        `Tumor BBox (${data.detection_confidence}%)` : 'Normal (No BBox)';
+
+      // Update Probability Bars
+      const probs = data.all_probabilities;
+      setBar('Glioma', probs.Glioma || 0);
+      setBar('Meningioma', probs.Meningioma || 0);
+      setBar('Pituitary', probs.Pituitary || 0);
+      setBar('NonTumor', probs['Non-Tumor'] || 0);
+    }
+
+    function setBar(id, val) {
+      document.getElementById(`prob${id}Text`).innerText = val.toFixed(1) + '%';
+      document.getElementById(`prob${id}Bar`).style.width = val + '%';
+    }
+  </script>
+</body>
+</html>
